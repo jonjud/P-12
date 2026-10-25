@@ -11,6 +11,11 @@ func _ready() -> void:
 		net.hello_pv = 99
 	if "--dropitem" in a:
 		net.db._items.erase(net.db._items.keys()[0])
+	for f in ["scenario", "full", "fuzz", "rtt", "dc", "show"]:
+		if ("--" + f) in a:
+			net.replicas_changed.connect(Callable(net, "run_" + f), CONNECT_ONE_SHOT)
+	if "--quiet" in a:
+		net.quiet = true
 	if "--host" in a:
 		net.start_host()
 	elif "--client" in a:
