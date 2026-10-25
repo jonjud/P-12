@@ -7,6 +7,7 @@ var logic : HostLogic
 var accepted : Dictionary = {}   # host: peer_id -> true
 var replicas : Dictionary = {}   # client: owner_id -> Inventory (อ่านอย่างเดียว)
 var _resyncs : int = 0
+var hello_pv : int = HostLogic.PROTOCOL_VERSION
 signal replicas_changed
 signal result_received(res : Dictionary)
 
@@ -78,7 +79,7 @@ func start_client(addr : String) -> void:
 	multiplayer.multiplayer_peer = p
 	multiplayer.connected_to_server.connect(func():
 		_log("connected, sending hello")
-		hs_hello.rpc_id(1, HostLogic.PROTOCOL_VERSION, db_sig(db)))
+		hs_hello.rpc_id(1, hello_pv, db_sig(db)))
 	multiplayer.server_disconnected.connect(func(): _log("lost host"))
 
 @rpc("authority", "call_remote", "reliable")
