@@ -6,16 +6,16 @@ func _ready() -> void:
 	net.name = "Net"
 	add_child(net)
 	net.db = ItemDatabase.new()
-	net.db.load_from_directory("res://data/")
+	print("db loaded: ", net.db.load_from_directory("res://data/"), " items=", net.db._items.size())
+	if "--quiet" in a:
+		net.quiet = true
 	if "--badpv" in a:
 		net.hello_pv = 99
 	if "--dropitem" in a:
 		net.db._items.erase(net.db._items.keys()[0])
-	for f in ["scenario", "full", "fuzz", "rtt", "dc", "show"]:
+	for f in ["full", "fuzz", "rtt", "dc2"]:
 		if ("--" + f) in a:
 			net.replicas_changed.connect(Callable(net, "run_" + f), CONNECT_ONE_SHOT)
-	if "--quiet" in a:
-		net.quiet = true
 	if "--host" in a:
 		net.start_host()
 	elif "--client" in a:
